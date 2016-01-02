@@ -1,7 +1,7 @@
 package highlow
 
-// Guess returns the number of guesses to guess the secret number within the range.
-func Guess(secret, min, max int) int {
+// CountGuesses returns the number of guesses to guess the secret number within the range.
+func CountGuesses(secret, min, max int) int {
 	guesses := 0
 	low, high := min, max
 	for low < high {

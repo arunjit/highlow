@@ -12,6 +12,6 @@ const (
 
 func main() {
 	secret := highlow.GenerateSecret(min, max)
-	guesses := highlow.Guess(secret, min, max)
+	guesses := highlow.CountGuesses(secret, min, max)
 	fmt.Printf("%d guesses to guess %d\n", guesses, secret)
 }
