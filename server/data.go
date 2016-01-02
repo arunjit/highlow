@@ -1,6 +1,7 @@
 package hlserver
 
 import (
+	"errors"
 	"math/rand"
 	"time"
 
@@ -13,13 +14,18 @@ const (
 	secretKind = "Secret"
 )
 
+var (
+	// ErrNoData ...
+	ErrNoData = errors.New("No data for the given query")
+)
+
 // Secret is the datastore type to store secret numbers and their range.
 type Secret struct {
 	Key     string `json:"key" datastore:"-"`
 	Min     int    `json:"min" datastore:"min"`
 	Max     int    `json:"max" datastore:"max"`
-	Secret  int    `json:"secret" datastore:"secret"`
-	Guesses int    `json:"guesses" datastore:"guesses"`
+	Secret  int    `json:"secret,omitempty" datastore:"secret"`
+	Guesses int    `json:"guesses,omitempty" datastore:"guesses"`
 }
 
 // NewSecret ...
@@ -69,6 +75,9 @@ func GetAnySecret(c context.Context, min, max int) (*Secret, error) {
 	keys, err := q.GetAll(c, nil)
 	if err != nil {
 		return nil, err
+	}
+	if len(keys) == 0 {
+		return nil, ErrNoData
 	}
 	rand.Seed(time.Now().UnixNano())
 	i := rand.Intn(len(keys))
